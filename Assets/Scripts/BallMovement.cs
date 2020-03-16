@@ -10,6 +10,9 @@ public class BallMovement : MonoBehaviour
 
     private Rigidbody2D _body;
     private Vector2 _moveDirectionNormalize;
+    private bool _onGround;
+
+    public Vector2 Velocity => _body.velocity;
 
     private void Awake()
     {
@@ -19,11 +22,12 @@ public class BallMovement : MonoBehaviour
     private void Start()
     {
         _moveDirectionNormalize = Vector2.right;
+        _onGround = false;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (_onGround && Input.GetKeyDown(KeyCode.Space))
         {
             _body.AddForce(Vector2.up * _jumpForce);
         }
@@ -32,6 +36,11 @@ public class BallMovement : MonoBehaviour
     private void FixedUpdate()
     {
         _body.velocity = new Vector2(_moveDirectionNormalize.x * _movementSpeed, _body.velocity.y);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        OnCollisionStay2D(collision);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -46,18 +55,15 @@ public class BallMovement : MonoBehaviour
                 rightPoint = contact;
         }
 
-        if (rightPoint.normal.y < 0.65)
-        {
-            _moveDirectionNormalize = Vector2.zero;
-            return;
-        }
-
         Vector2 moveAlongGround = new Vector2(rightPoint.normal.y, -rightPoint.normal.x);
         _moveDirectionNormalize = moveAlongGround.normalized;
+
+        _onGround = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+        _onGround = false;
         _moveDirectionNormalize = Vector2.right;
     }
 }

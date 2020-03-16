@@ -6,16 +6,15 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private Transform _target;
     [SerializeField] private float _movementSpeed;
+    [SerializeField] private Vector2 _offcet;
 
-    private Vector3 _offcet;
+    private Vector3 _nextPosition;
 
-    private void Start()
+    private void FixedUpdate()
     {
-        _offcet = new Vector3(0,0,transform.position.z - _target.position.z);
-    }
+        _nextPosition = _target.position + (Vector3)_offcet;
+        _nextPosition.z = transform.position.z;
 
-    private void LateUpdate()
-    {
-        transform.position = Vector3.Lerp(transform.position, _target.position + _offcet, _movementSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, _nextPosition, _movementSpeed * Time.deltaTime);
     }
 }
