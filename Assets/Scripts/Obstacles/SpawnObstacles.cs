@@ -5,12 +5,25 @@ using UnityEngine;
 public class SpawnObstacles : MonoBehaviour
 {
     [SerializeField] private List<Obstacle> _tempates;
+    [SerializeField] [Range(0f, 1f)] private float _minGroundNormal = 0.65f;
+    [SerializeField] private float _minSpawnDistance;
+    [SerializeField] private float _maxSpawnDistance;
 
-    private Vector2 _lastSpawnPosition;
+    private float _nextSpawnPositionX;
+
+    private void OnValidate()
+    {
+        if (_minSpawnDistance > _maxSpawnDistance)
+        {
+            float min = _minSpawnDistance;
+            _minSpawnDistance = _maxSpawnDistance;
+            _maxSpawnDistance = min;
+        }
+    }
 
     private void Start()
     {
-        _lastSpawnPosition = Camera.main.transform.position;
+        _nextSpawnPositionX = Camera.main.RightPosition() + Random.Range(_minSpawnDistance, _maxSpawnDistance);
     }
 
     private void Update()
@@ -26,14 +39,19 @@ public class SpawnObstacles : MonoBehaviour
     {
         Vector2 origin = new Vector2(Camera.main.RightPosition() + template.transform.localScale.x, 100f);
         RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down);
+        if (hit.normal.y < _minGroundNormal)
+            return;
 
-        float deviation = Mathf.Acos(hit.normal.x) * 180f / Mathf.PI;
-        Instantiate(template, hit.point + new Vector2(0, template.transform.localScale.y), Quaternion.Euler(0, 0, deviation - 90f));
-        _lastSpawnPosition = hit.point;
+        float deviationAngle = Mathf.Acos(hit.normal.x) * 180f / Mathf.PI;
+
+        Obstacle inst = Instantiate(template, hit.point, Quaternion.Euler(0, 0, deviationAngle - 90f));
+        inst.transform.position += Vector3.up * (inst.SpriteSize.y / 2);
+
+        _nextSpawnPositionX += Random.Range(_minSpawnDistance, _maxSpawnDistance);
     }
 
     private bool CanSpawn()
     {
-        return Camera.main.RightPosition() - _lastSpawnPosition.x > 20f;
+        return Camera.main.RightPosition() > _nextSpawnPositionX;
     }
 }

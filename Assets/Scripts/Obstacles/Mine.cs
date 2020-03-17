@@ -10,6 +10,7 @@ public class Mine : Obstacle
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _sprite = GetComponent<SpriteRenderer>();
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)

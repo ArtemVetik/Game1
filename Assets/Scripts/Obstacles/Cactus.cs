@@ -6,6 +6,11 @@ public class Cactus : Obstacle
 {
     private float _force;
 
+    private void Awake()
+    {
+        _sprite = GetComponent<SpriteRenderer>();
+    }
+
     private void Start()
     {
         _force = 300f;
