@@ -35,7 +35,8 @@ public class BallMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _body.velocity = new Vector2(_moveDirectionNormalize.x * _movementSpeed, _body.velocity.y);
+        float newXvelocity = Mathf.Lerp(_body.velocity.x, _moveDirectionNormalize.x * _movementSpeed, Time.fixedDeltaTime);
+        _body.velocity = new Vector2(newXvelocity, _body.velocity.y);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

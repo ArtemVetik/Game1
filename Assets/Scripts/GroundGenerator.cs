@@ -94,6 +94,6 @@ public class GroundGenerator : MonoBehaviour
 
     private bool CanRemove()
     {
-        return Camera.main.LeftPosition() - _spline.GetPosition(2).x > 1f;
+        return Camera.main.LeftPosition() - _spline.GetPosition(2).x > 5f;
     }
 }
