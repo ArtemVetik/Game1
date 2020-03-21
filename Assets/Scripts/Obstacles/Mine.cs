@@ -9,15 +9,16 @@ public class Mine : Obstacle
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
         _sprite = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Rigidbody2D ball))
+        if (collision.gameObject.TryGetComponent(out Rigidbody2D body))
         {
-            ball.velocity = new Vector2(0, ball.velocity.y);
+            body.velocity = Vector2.zero;
+            body.AddForce((Vector2.left + Vector2.up) * 300f);
             _animator.SetTrigger("Explosion");
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Cactus : Obstacle
 {
-    private float _force;
+    private float _hitForce;
 
     private void Awake()
     {
@@ -13,16 +13,15 @@ public class Cactus : Obstacle
 
     private void Start()
     {
-        _force = 300f;
+        _hitForce = 300f;
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.TryGetComponent(out Rigidbody2D body))
         {
-            
             body.velocity = Vector2.zero;
-            body.AddForce((body.transform.position - transform.position).normalized * _force);
+            body.AddForce((body.transform.position - transform.position).normalized * _hitForce);
         }
     }
 }

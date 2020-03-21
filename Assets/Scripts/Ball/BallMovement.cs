@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class BallMovement : MonoBehaviour
 {
     [SerializeField] private float _movementSpeed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private float _acceleration;
 
     private Rigidbody2D _body;
     private Vector2 _moveDirectionNormalize;
@@ -28,15 +27,13 @@ public class BallMovement : MonoBehaviour
     private void Update()
     {
         if (_onGround && Input.GetKeyDown(KeyCode.Space))
-        {
             _body.AddForce(Vector2.up * _jumpForce);
-        }
     }
 
     private void FixedUpdate()
     {
-        float newXvelocity = Mathf.Lerp(_body.velocity.x, _moveDirectionNormalize.x * _movementSpeed, Time.fixedDeltaTime);
-        _body.velocity = new Vector2(newXvelocity, _body.velocity.y);
+        float velocityX = Mathf.Lerp(_body.velocity.x, _moveDirectionNormalize.x * _movementSpeed, _acceleration * Time.fixedDeltaTime);
+        _body.velocity = new Vector2(velocityX, _body.velocity.y);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -64,7 +61,7 @@ public class BallMovement : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        _onGround = false;
         _moveDirectionNormalize = Vector2.right;
+        _onGround = false;
     }
 }

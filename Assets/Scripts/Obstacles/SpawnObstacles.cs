@@ -5,10 +5,11 @@ using UnityEngine;
 public class SpawnObstacles : MonoBehaviour
 {
     [SerializeField] private List<Obstacle> _tempates;
-    [SerializeField] [Range(0f, 1f)] private float _minGroundNormal = 0.65f;
+    [SerializeField] [Range(0f, 90f)] private float _maxGroundAngle;
     [SerializeField] private float _minSpawnDistance;
     [SerializeField] private float _maxSpawnDistance;
 
+    private LayerMask _groundMask;
     private float _nextSpawnPositionX;
 
     private void OnValidate()
@@ -23,6 +24,7 @@ public class SpawnObstacles : MonoBehaviour
 
     private void Start()
     {
+        _groundMask = LayerMask.GetMask("Ground");
         _nextSpawnPositionX = Camera.main.RightPosition() + Random.Range(_minSpawnDistance, _maxSpawnDistance);
     }
 
@@ -38,8 +40,8 @@ public class SpawnObstacles : MonoBehaviour
     private void Spawn(Obstacle template)
     {
         Vector2 origin = new Vector2(Camera.main.RightPosition() + template.transform.localScale.x, 100f);
-        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down);
-        if (hit.normal.y < _minGroundNormal)
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, Mathf.Infinity, _groundMask);
+        if (hit.normal.y < Mathf.Sin(_maxGroundAngle * Mathf.Rad2Deg))
             return;
 
         float deviationAngle = Mathf.Acos(hit.normal.x) * 180f / Mathf.PI;
@@ -52,6 +54,6 @@ public class SpawnObstacles : MonoBehaviour
 
     private bool CanSpawn()
     {
-        return Camera.main.RightPosition() > _nextSpawnPositionX;
+        return Camera.main.RightPosition() >= _nextSpawnPositionX;
     }
 }

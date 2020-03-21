@@ -12,7 +12,7 @@ public class CameraScaling : MonoBehaviour
     private void Start()
     {
         _startOrthographicSize = Camera.main.orthographicSize;
-        _groundMask = LayerMask.NameToLayer("Ball") << 8;
+        _groundMask = LayerMask.GetMask("Ground");
     }
 
     private void FixedUpdate()

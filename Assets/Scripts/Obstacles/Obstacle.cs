@@ -11,7 +11,7 @@ public abstract class Obstacle : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        Destroy(gameObject);
     }
 
     private void OnBecameInvisible()
