@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
-public class BackroundMove : MonoBehaviour
+public class BackroundMoveDynamic : MonoBehaviour
 {
     [SerializeField] private BallMovement _ball;
     [SerializeField] private float _shiftSpeed;
