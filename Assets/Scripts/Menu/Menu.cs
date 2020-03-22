@@ -5,30 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
-    private static Menu _instance = null;
-    private ScenesInfo _sceneInfo;
-
-    private void Awake()
-    {
-        if (_instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
-        _sceneInfo = new ScenesInfo();
-        DontDestroyOnLoad(gameObject);
-    }
-
     public void GoHome()
     {
-        SceneManager.LoadScene(_sceneInfo.MainMenu);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void LoadGame()
     {
-        SceneManager.LoadScene(_sceneInfo.Game);
+        SceneManager.LoadScene("BallGame");
     }
 
     public void Exit()

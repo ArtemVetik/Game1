@@ -12,11 +12,17 @@ public static class Extentions
 
     public static float LeftPosition(this Camera camera)
     {
+        if (camera == null)
+            return 0f;
+           
         return camera.transform.position.x - camera.WorldWidth() / 2;
     }
 
     public static float RightPosition(this Camera camera)
     {
+        if (camera == null)
+            return 0f;
+
         return camera.transform.position.x + camera.WorldWidth() / 2;
     }
 
