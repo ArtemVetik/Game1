@@ -3,12 +3,12 @@
 [RequireComponent(typeof(Rigidbody2D))]
 public class BallMovement : MonoBehaviour
 {
-    [SerializeField] private float _movementSpeed;
+    [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _acceleration;
 
     private Rigidbody2D _body;
-    private Vector2 _moveDirectionNormalize;
+    private Vector2 _direction;
     private bool _onGround;
 
     public Vector2 Velocity => _body.velocity;
@@ -20,7 +20,7 @@ public class BallMovement : MonoBehaviour
 
     private void Start()
     {
-        _moveDirectionNormalize = Vector2.right;
+        _direction = Vector2.right;
         _onGround = false;
     }
 
@@ -32,16 +32,27 @@ public class BallMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float velocityX = Mathf.Lerp(_body.velocity.x, _moveDirectionNormalize.x * _movementSpeed, _acceleration * Time.fixedDeltaTime);
+        float velocityX = Mathf.Lerp(_body.velocity.x, _direction.x * _speed, _acceleration * Time.fixedDeltaTime);
         _body.velocity = new Vector2(velocityX, _body.velocity.y);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        OnCollisionStay2D(collision);
+        ContactPoint2D rightPoint = GetRightPoint(collision);
+
+        Vector2 directionAlongGround = new Vector2(rightPoint.normal.y, -rightPoint.normal.x);
+        _direction = directionAlongGround.normalized;
+
+        _onGround = true;
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        _direction = Vector2.right;
+        _onGround = false;
+    }
+
+    private ContactPoint2D GetRightPoint(Collision2D collision)
     {
         ContactPoint2D[] contacts = new ContactPoint2D[collision.contactCount];
         collision.GetContacts(contacts);
@@ -53,15 +64,6 @@ public class BallMovement : MonoBehaviour
                 rightPoint = contact;
         }
 
-        Vector2 moveAlongGround = new Vector2(rightPoint.normal.y, -rightPoint.normal.x);
-        _moveDirectionNormalize = moveAlongGround.normalized;
-
-        _onGround = true;
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        _moveDirectionNormalize = Vector2.right;
-        _onGround = false;
+        return rightPoint;
     }
 }

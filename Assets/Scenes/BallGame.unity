@@ -429,7 +429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 970630308}
   _movementSpeed: 5
-  _offcet: {x: 5, y: 1.5}
+  _offset: {x: 5, y: 1.2}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -692,7 +692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a85361c0f547441877c9d435d5b56d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 5
+  _speed: 5
   _jumpForce: 450
   _acceleration: 1.5
 --- !u!50 &970630305
